@@ -5,7 +5,7 @@ local function boot(msg, url)
     
     -- 1. I-load ang purong GUI mula sa main.lua
     local success, UIAPI = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Moymoy21/IOHUB/refs/heads/main/main.lua"))()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/aceeria3-lab/IOHUB/refs/heads/main/UISetup.lua"))()
     end)
 
     -- 2. Kung pumasok ang UI, i-load ang kaukulang script base sa Place ID
