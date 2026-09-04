@@ -25,105 +25,24 @@ return function(UIAPI)
         })
     end)
 
-    UIAPI.createCustomButton("Info", "Book Supported", "Show what Book/Chapter Available", function()
-        local player = game:GetService("Players").LocalPlayer
-        local playerGui = player:WaitForChild("PlayerGui")
-        local tweenService = game:GetService("TweenService")
-        
-        local availableBooks = {
-            "• Rage Book 3 Chapter 1",
-            "• Jealousy Book 2 Chapter 4",
-            "• Jealousy Book 2 Chapter 3",
-            "• Control All Chapter",
-        }
-        
-        local combinedText = table.concat(availableBooks, "\n")
-        
-        -- SMART SIZE ADJUSTMENT
-        local baseHeight = 110
-        local heightPerBook = 20
-        local dynamicHeight = baseHeight + (#availableBooks * heightPerBook)
-        
-        -- I-minimize ang main menu gamit ang UIAPI function
-        UIAPI.minimizeMenu()
-        
-        -- Burado ang lumang central UI kung meron man
-        if playerGui:FindFirstChild("IOHUB_CenterMenu") then
-            playerGui.IOHUB_CenterMenu:Destroy()
-        end
-        
-        -- CREATING THE CENTRAL UI WINDOW
-        local screenGui = Instance.new("ScreenGui")
-        screenGui.Name = "IOHUB_CenterMenu"
-        screenGui.ResetOnSpawn = false
-        screenGui.DisplayOrder = 99999 
-        
-        local mainFrameCenter = Instance.new("Frame")
-        mainFrameCenter.Name = "MainFrameCenter"
-        mainFrameCenter.Size = UDim2.new(0, 340, 0, dynamicHeight)
-        mainFrameCenter.Position = UDim2.new(0.5, -170, 0.5, -(dynamicHeight / 2))
-        mainFrameCenter.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-        mainFrameCenter.BackgroundTransparency = 0.05
-        mainFrameCenter.BorderSizePixel = 0
-        mainFrameCenter.Parent = screenGui
-        
-        local uiCorner = Instance.new("UICorner")
-        uiCorner.CornerRadius = UDim.new(0, 10)
-        uiCorner.Parent = mainFrameCenter
-        
-        local uiStroke = Instance.new("UIStroke")
-        uiStroke.Color = Color3.fromRGB(60, 60, 60)
-        uiStroke.Thickness = 1.5
-        uiStroke.Parent = mainFrameCenter
-        
-        local titleLabel = Instance.new("TextLabel")
-        titleLabel.Name = "Title"
-        titleLabel.Size = UDim2.new(1, 0, 0, 40)
-        titleLabel.Position = UDim2.new(0, 0, 0, 8)
-        titleLabel.BackgroundTransparency = 1
-        titleLabel.Text = "Book Supported"
-        titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-        titleLabel.TextSize = 20
-        titleLabel.Font = Enum.Font.GothamBold
-        titleLabel.Parent = mainFrameCenter
-        
-        local contentLabel = Instance.new("TextLabel")
-        contentLabel.Name = "Content"
-        contentLabel.Size = UDim2.new(1, -30, 1, -55)
-        contentLabel.Position = UDim2.new(0, 15, 0, 50)
-        contentLabel.BackgroundTransparency = 1
-        contentLabel.Text = combinedText
-        contentLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-        contentLabel.TextSize = 14
-        contentLabel.Font = Enum.Font.GothamMedium
-        contentLabel.TextXAlignment = Enum.TextXAlignment.Left
-        contentLabel.TextYAlignment = Enum.TextYAlignment.Top
-        contentLabel.Parent = mainFrameCenter
-        
-        screenGui.Parent = playerGui
-        
-        -- AUTOMATIC FADE OUT AT RE-OPEN NG MAIN GUI
-        task.spawn(function()
-            task.wait(2.7)
-            
-            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-            local fadeFrame = tweenService:Create(mainFrameCenter, tweenInfo, {BackgroundTransparency = 1})
-            local fadeTitle = tweenService:Create(titleLabel, tweenInfo, {TextTransparency = 1})
-            local fadeContent = tweenService:Create(contentLabel, tweenInfo, {TextTransparency = 1})
-            local fadeStroke = tweenService:Create(uiStroke, tweenInfo, {Transparency = 1})
-            
-            fadeFrame:Play()
-            fadeTitle:Play()
-            fadeContent:Play()
-            fadeStroke:Play()
-            
-            task.wait(0.3)
-            screenGui:Destroy()
-            
-            -- I-bukas ulit ang main menu gamit ang UIAPI function
-            UIAPI.openMenu()
-        end)
-    end)
+    local playGroup = UIAPI.createDropdownSection("Info", "Book Supported")
+
+UIAPI.createButton(playGroup, "Control All Chapter", "", function()
+    
+end)
+
+UIAPI.createButton(playGroup, "Jelousy Book 2 Chapter 4", "", function()
+    
+end)
+
+UIAPI.createButton(playGroup, "Jelousy Book 2 Chapter 3", "", function()
+    
+end)
+
+UIAPI.createButton(playGroup, "Rage Chapter 1", "", function()
+    
+end)
+
 
     -- ====================================================================
     -- AUTO LOAD SAVED BUTTON
