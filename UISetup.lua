@@ -323,6 +323,1045 @@ function UIAPI.createCustomButton(pageName, title, description, callback)
     actionBtn.Parent = targetPage
 end
 
+----------------------------------------------------
+-- MAIN DROPDOWN SECTION
+----------------------------------------------------
+function UIAPI.createDropdownSection(pageName, sectionTitle)
+    local targetPage = pages[pageName]
+    if not targetPage then return end
+
+    local isOpen = false 
+    
+    local dropContainer = Instance.new("Frame")
+    dropContainer.Size = UDim2.new(0.92, 0, 0, 40)
+    dropContainer.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    dropContainer.BackgroundTransparency = 0.5
+    dropContainer.ClipsDescendants = true
+    dropContainer.Parent = targetPage
+
+    local dropCorner = Instance.new("UICorner")
+    dropCorner.CornerRadius = UDim.new(0, 8)
+    dropCorner.Parent = dropContainer
+
+    local headerBtn = Instance.new("TextButton")
+    headerBtn.Size = UDim2.new(1, 0, 0, 40)
+    headerBtn.BackgroundTransparency = 1
+    headerBtn.Text = ""
+    headerBtn.Parent = dropContainer
+
+    local titleLbl = Instance.new("TextLabel")
+    titleLbl.Size = UDim2.new(1, -40, 1, 0)
+    titleLbl.Position = UDim2.new(0, 15, 0, 0)
+    titleLbl.BackgroundTransparency = 1
+    titleLbl.Text = sectionTitle
+    titleLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLbl.Font = Enum.Font.GothamBold
+    titleLbl.TextSize = 20
+    titleLbl.TextXAlignment = Enum.TextXAlignment.Left
+    titleLbl.Parent = headerBtn
+
+    local arrowIcon = Instance.new("ImageLabel")
+    arrowIcon.Size = UDim2.new(0, 16, 0, 16)
+    arrowIcon.Position = UDim2.new(1, -28, 0.5, -8)
+    arrowIcon.BackgroundTransparency = 1
+    arrowIcon.Image = "rbxassetid://10709791437"
+    arrowIcon.Rotation = 90
+    arrowIcon.ImageColor3 = Color3.fromRGB(200, 200, 200)
+    arrowIcon.Parent = headerBtn
+
+    local itemsHolder = Instance.new("Frame")
+    itemsHolder.Size = UDim2.new(1, 0, 0, 0)
+    itemsHolder.Position = UDim2.new(0, 0, 0, 40)
+    itemsHolder.BackgroundTransparency = 1
+    itemsHolder.Parent = dropContainer
+
+    local itemsList = Instance.new("UIListLayout")
+    itemsList.Padding = UDim.new(0, 8)
+    itemsList.SortOrder = Enum.SortOrder.LayoutOrder
+    itemsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    itemsList.Parent = itemsHolder
+
+    itemsList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        if isOpen then
+            dropContainer.Size = UDim2.new(0.92, 0, 0, itemsList.AbsoluteContentSize.Y + 50)
+            itemsHolder.Size = UDim2.new(1, 0, 0, itemsList.AbsoluteContentSize.Y + 10)
+        end
+    end)
+
+    headerBtn.MouseButton1Click:Connect(function()
+        isOpen = not isOpen
+        local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+        
+        if isOpen then
+            TweenService:Create(arrowIcon, tweenInfo, {Rotation = 270}):Play()
+            TweenService:Create(dropContainer, tweenInfo, {Size = UDim2.new(0.92, 0, 0, itemsList.AbsoluteContentSize.Y + 50)}):Play()
+        else
+            TweenService:Create(arrowIcon, tweenInfo, {Rotation = 90}):Play()
+            TweenService:Create(dropContainer, tweenInfo, {Size = UDim2.new(0.92, 0, 0, 40)}):Play()
+        end
+    end)
+
+    return itemsHolder
+end
+
+----------------------------------------------------
+-- NESTED DROPDOWN SECTION
+----------------------------------------------------
+function UIAPI.createNestedDropdownSection(parentContainer, sectionTitle)
+    local isOpen = false
+    
+    local dropContainer = Instance.new("Frame")
+    dropContainer.Size = UDim2.new(0.95, 0, 0, 36)
+    dropContainer.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    dropContainer.BackgroundTransparency = 0.5
+    dropContainer.ClipsDescendants = true
+    dropContainer.Parent = parentContainer
+
+    local dropCorner = Instance.new("UICorner")
+    dropCorner.CornerRadius = UDim.new(0, 6)
+    dropCorner.Parent = dropContainer
+
+    local headerBtn = Instance.new("TextButton")
+    headerBtn.Size = UDim2.new(1, 0, 0, 36)
+    headerBtn.BackgroundTransparency = 1
+    headerBtn.Text = ""
+    headerBtn.Parent = dropContainer
+
+    local titleLbl = Instance.new("TextLabel")
+    titleLbl.Size = UDim2.new(1, -35, 1, 0)
+    titleLbl.Position = UDim2.new(0, 12, 0, 0)
+    titleLbl.BackgroundTransparency = 1
+    titleLbl.Text = sectionTitle
+    titleLbl.TextColor3 = Color3.fromRGB(230, 230, 230)
+    titleLbl.Font = Enum.Font.GothamBold
+    titleLbl.TextSize = 11
+    titleLbl.TextXAlignment = Enum.TextXAlignment.Left
+    titleLbl.Parent = headerBtn
+
+    local arrowIcon = Instance.new("ImageLabel")
+    arrowIcon.Size = UDim2.new(0, 14, 0, 14)
+    arrowIcon.Position = UDim2.new(1, -24, 0.5, -7)
+    arrowIcon.BackgroundTransparency = 1
+    arrowIcon.Image = "rbxassetid://10709791437"
+    arrowIcon.Rotation = 90
+    arrowIcon.ImageColor3 = Color3.fromRGB(180, 180, 180)
+    arrowIcon.Parent = headerBtn
+
+    local itemsHolder = Instance.new("Frame")
+    itemsHolder.Size = UDim2.new(1, 0, 0, 0)
+    itemsHolder.Position = UDim2.new(0, 0, 0, 36)
+    itemsHolder.BackgroundTransparency = 1
+    itemsHolder.Parent = dropContainer
+
+    local itemsList = Instance.new("UIListLayout")
+    itemsList.Padding = UDim.new(0, 6)
+    itemsList.SortOrder = Enum.SortOrder.LayoutOrder
+    itemsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    itemsList.Parent = itemsHolder
+
+    itemsList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        if isOpen then
+            dropContainer.Size = UDim2.new(0.95, 0, 0, itemsList.AbsoluteContentSize.Y + 45)
+            itemsHolder.Size = UDim2.new(1, 0, 0, itemsList.AbsoluteContentSize.Y + 10)
+        end
+    end)
+
+    headerBtn.MouseButton1Click:Connect(function()
+        isOpen = not isOpen
+        local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+        
+        if isOpen then
+            TweenService:Create(arrowIcon, tweenInfo, {Rotation = 270}):Play()
+            TweenService:Create(dropContainer, tweenInfo, {Size = UDim2.new(0.95, 0, 0, itemsList.AbsoluteContentSize.Y + 45)}):Play()
+        else
+            TweenService:Create(arrowIcon, tweenInfo, {Rotation = 90}):Play()
+            TweenService:Create(dropContainer, tweenInfo, {Size = UDim2.new(0.95, 0, 0, 36)}):Play()
+        end
+    end)
+
+    return itemsHolder
+end
+
+----------------------------------------------------
+-- BUTTON CREATOR (Para sa Action Buttons tulad ng Save)
+----------------------------------------------------
+function UIAPI.createButton(parentContainer, title, description, callback)
+    local row = Instance.new("Frame")
+    row.Size = UDim2.new(0.95, 0, 0, 42)
+    row.BackgroundTransparency = 1
+    
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(0.6, 0, 0, 16)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Text = title
+    titleLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextSize = 11
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = row
+    
+    local descLabel = Instance.new("TextLabel")
+    descLabel.Size = UDim2.new(0.6, 0, 0, 20)
+    descLabel.Position = UDim2.new(0, 0, 0, 16)
+    descLabel.BackgroundTransparency = 1
+    descLabel.Text = description
+    descLabel.TextColor3 = Color3.fromRGB(130, 130, 130)
+    descLabel.Font = Enum.Font.Gotham
+    descLabel.TextSize = 10
+    descLabel.TextWrapped = true
+    descLabel.TextXAlignment = Enum.TextXAlignment.Left
+    descLabel.TextYAlignment = Enum.TextYAlignment.Top
+    descLabel.Parent = row
+    
+    local actionBtn = Instance.new("TextButton")
+    actionBtn.Size = UDim2.new(0, 100, 0, 26)
+    actionBtn.Position = UDim2.new(1, -100, 0.5, -13)
+    actionBtn.BackgroundColor3 = Color3.fromRGB(150, 30, 50)
+    actionBtn.BackgroundTransparency = 0.2
+    actionBtn.Text = "Save"
+    actionBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    actionBtn.Font = Enum.Font.GothamBold
+    actionBtn.TextSize = 11
+    
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 6)
+    btnCorner.Parent = actionBtn
+    
+    actionBtn.MouseButton1Click:Connect(function()
+        if callback then callback() end
+    end)
+    
+    actionBtn.Parent = row
+    row.Parent = parentContainer
+end
+
+----------------------------------------------------
+-- MULTI-SELECT DROPDOWN SELECTOR (FIXED SEARCH)
+----------------------------------------------------
+function UIAPI.createDropdownSelect(parentContainer, title, itemsListTable, callback)
+    local isOpen = false
+    
+    if not currentConfigData.dropdowns[title] then
+        currentConfigData.dropdowns[title] = {}
+    end
+    local selectedItems = currentConfigData.dropdowns[title]
+    local allSelected = false
+    
+    local dropContainer = Instance.new("Frame")
+    dropContainer.Size = UDim2.new(0.95, 0, 0, 36)
+    dropContainer.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    dropContainer.BackgroundTransparency = 0.5
+    dropContainer.ClipsDescendants = true
+    dropContainer.Parent = parentContainer
+
+    local dropCorner = Instance.new("UICorner")
+    dropCorner.CornerRadius = UDim.new(0, 6)
+    dropCorner.Parent = dropContainer
+
+    local headerBtn = Instance.new("TextButton")
+    headerBtn.Size = UDim2.new(1, 0, 0, 36)
+    headerBtn.BackgroundTransparency = 1
+    headerBtn.Text = ""
+    headerBtn.Parent = dropContainer
+
+    local titleLbl = Instance.new("TextLabel")
+    titleLbl.Size = UDim2.new(0.5, 0, 1, 0)
+    titleLbl.Position = UDim2.new(0, 12, 0, 0)
+    titleLbl.BackgroundTransparency = 1
+    titleLbl.Text = title
+    titleLbl.TextColor3 = Color3.fromRGB(230, 230, 230)
+    titleLbl.Font = Enum.Font.GothamBold
+    titleLbl.TextSize = 11
+    titleLbl.TextXAlignment = Enum.TextXAlignment.Left
+    titleLbl.Parent = headerBtn
+
+    local selectedLbl = Instance.new("TextLabel")
+    selectedLbl.Size = UDim2.new(0.4, 0, 1, 0)
+    selectedLbl.Position = UDim2.new(0.55, -20, 0, 0)
+    selectedLbl.BackgroundTransparency = 1
+    selectedLbl.Text = "None selected"
+    selectedLbl.TextColor3 = Color3.fromRGB(150, 150, 150)
+    selectedLbl.Font = Enum.Font.Gotham
+    selectedLbl.TextSize = 10
+    selectedLbl.TextXAlignment = Enum.TextXAlignment.Right
+    selectedLbl.Parent = headerBtn
+
+    local arrowIcon = Instance.new("ImageLabel")
+    arrowIcon.Size = UDim2.new(0, 14, 0, 14)
+    arrowIcon.Position = UDim2.new(1, -24, 0.5, -7)
+    arrowIcon.BackgroundTransparency = 1
+    arrowIcon.Image = "rbxassetid://10709791437"
+    arrowIcon.Rotation = 90
+    arrowIcon.ImageColor3 = Color3.fromRGB(180, 180, 180)
+    arrowIcon.Parent = headerBtn
+
+    local contentHolder = Instance.new("Frame")
+    contentHolder.Size = UDim2.new(1, 0, 0, 0)
+    contentHolder.Position = UDim2.new(0, 0, 0, 36)
+    contentHolder.BackgroundTransparency = 1
+    contentHolder.Parent = dropContainer
+
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.Padding = UDim.new(0, 6)
+    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    listLayout.Parent = contentHolder
+
+    local searchBox = Instance.new("TextBox")
+    searchBox.Size = UDim2.new(0.92, 0, 0, 28)
+    searchBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    searchBox.Text = ""
+    searchBox.PlaceholderText = "Search 🔎"
+    searchBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+    searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    searchBox.Font = Enum.Font.Gotham
+    searchBox.TextSize = 11
+    searchBox.ClearTextOnFocus = false
+    
+    local searchCorner = Instance.new("UICorner")
+    searchCorner.CornerRadius = UDim.new(0, 4)
+    searchCorner.Parent = searchBox
+    searchBox.Parent = contentHolder
+
+    local scrollOptions = Instance.new("ScrollingFrame")
+    scrollOptions.Size = UDim2.new(0.92, 0, 0, 90)
+    scrollOptions.BackgroundTransparency = 1
+    scrollOptions.BorderSizePixel = 0
+    scrollOptions.CanvasSize = UDim2.new(0, 0, 0, 0)
+    scrollOptions.ScrollBarThickness = 2
+    scrollOptions.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80)
+    scrollOptions.Parent = contentHolder
+
+    local optList = Instance.new("UIListLayout")
+    optList.Padding = UDim.new(0, 4)
+    optList.SortOrder = Enum.SortOrder.LayoutOrder
+    optList.Parent = scrollOptions
+
+    local optionButtons = {}
+    local allBtn = nil
+
+    local function updateSelectedLabel()
+        local count = 0
+        local names = {}
+        for item, isSel in pairs(selectedItems) do
+            if isSel then
+                count = count + 1
+                table.insert(names, item)
+            end
+        end
+        if count == 0 then
+            selectedLbl.Text = "None selected"
+        elseif count == #itemsListTable then
+            selectedLbl.Text = "All selected"
+        else
+            selectedLbl.Text = table.concat(names, ", ")
+        end
+    end
+
+    local function updateAllButtonState()
+        if not allBtn then return end
+        local allCurrentlySelected = true
+        for _, itemText in ipairs(itemsListTable) do
+            if not selectedItems[itemText] then
+                allCurrentlySelected = false
+                break
+            end
+        end
+        allSelected = allCurrentlySelected
+        
+        allBtn.BackgroundColor3 = allSelected and Color3.fromRGB(150, 30, 50) or Color3.fromRGB(35, 35, 35)
+        allBtn.BackgroundTransparency = allSelected and 0.2 or 0.5
+        allBtn.TextColor3 = allSelected and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(200, 200, 200)
+        allBtn.Font = allSelected and Enum.Font.GothamBold or Enum.Font.Gotham
+    end
+
+    local function populateOptions(filter)
+        -- Linisin nang lubusan ang lumang buttons para hindi magpatong-patong
+        for _, btn in pairs(optionButtons) do 
+            if btn.Button then btn.Button:Destroy() end 
+        end
+        optionButtons = {}
+        if allBtn then allBtn:Destroy() allBtn = nil end
+
+        -- I-trim at gawing lowercase ang filter para sa malinis na paghahanap
+        local cleanFilter = string.lower(string.gsub(filter or "", "^%s*(.-)%s*$", "%1"))
+
+        -- Ilagay ang "All" button kung pasok sa filter
+        if cleanFilter == "" or string.find(string.lower("All"), cleanFilter) then
+            allBtn = Instance.new("TextButton")
+            allBtn.Size = UDim2.new(1, 0, 0, 26)
+            allBtn.BackgroundColor3 = allSelected and Color3.fromRGB(150, 30, 50) or Color3.fromRGB(35, 35, 35)
+            allBtn.BackgroundTransparency = allSelected and 0.2 or 0.5
+            allBtn.Text = "  All"
+            allBtn.TextColor3 = allSelected and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(200, 200, 200)
+            allBtn.Font = allSelected and Enum.Font.GothamBold or Enum.Font.Gotham
+            allBtn.TextSize = 11
+            allBtn.TextXAlignment = Enum.TextXAlignment.Left
+
+            local allCorner = Instance.new("UICorner")
+            allCorner.CornerRadius = UDim.new(0, 4)
+            allCorner.Parent = allBtn
+
+            allBtn.MouseButton1Click:Connect(function()
+                allSelected = not allSelected
+                for _, itemText in ipairs(itemsListTable) do
+                    selectedItems[itemText] = allSelected
+                end
+                updateAllButtonState()
+                for _, btnData in pairs(optionButtons) do
+                    local isSel = selectedItems[btnData.ItemName] == true
+                    btnData.Button.BackgroundColor3 = isSel and Color3.fromRGB(150, 30, 50) or Color3.fromRGB(35, 35, 35)
+                    btnData.Button.BackgroundTransparency = isSel and 0.2 or 0.5
+                    btnData.Button.TextColor3 = isSel and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(200, 200, 200)
+                    btnData.Button.Font = isSel and Enum.Font.GothamBold or Enum.Font.Gotham
+                end
+                updateSelectedLabel()
+                if callback then callback(selectedItems) end
+            end)
+
+            allBtn.Parent = scrollOptions
+        end
+
+        -- I-loop at i-filter ang mga item batay sa tinype sa search box
+        for _, itemText in ipairs(itemsListTable) do
+            local lowerItemText = string.lower(itemText)
+            if cleanFilter == "" or string.find(lowerItemText, cleanFilter) then
+                local optBtn = Instance.new("TextButton")
+                optBtn.Size = UDim2.new(1, 0, 0, 26)
+                
+                local isSelected = selectedItems[itemText] == true
+                optBtn.BackgroundColor3 = isSelected and Color3.fromRGB(150, 30, 50) or Color3.fromRGB(35, 35, 35)
+                optBtn.BackgroundTransparency = isSelected and 0.2 or 0.5
+                optBtn.Text = "  " .. itemText
+                optBtn.TextColor3 = isSelected and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(200, 200, 200)
+                optBtn.Font = isSelected and Enum.Font.GothamBold or Enum.Font.Gotham
+                optBtn.TextSize = 11
+                optBtn.TextXAlignment = Enum.TextXAlignment.Left
+
+                local optCorner = Instance.new("UICorner")
+                optCorner.CornerRadius = UDim.new(0, 4)
+                optCorner.Parent = optBtn
+
+                optBtn.MouseButton1Click:Connect(function()
+                    selectedItems[itemText] = not selectedItems[itemText]
+                    
+                    local nowSelected = selectedItems[itemText]
+                    optBtn.BackgroundColor3 = nowSelected and Color3.fromRGB(150, 30, 50) or Color3.fromRGB(35, 35, 35)
+                    optBtn.BackgroundTransparency = nowSelected and 0.2 or 0.5
+                    optBtn.TextColor3 = nowSelected and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(200, 200, 200)
+                    optBtn.Font = nowSelected and Enum.Font.GothamBold or Enum.Font.Gotham
+
+                    updateAllButtonState()
+                    updateSelectedLabel()
+                    if callback then callback(selectedItems) end
+                end)
+
+                optBtn.Parent = scrollOptions
+                table.insert(optionButtons, {Button = optBtn, ItemName = itemText})
+            end
+        end
+
+        updateAllButtonState()
+        scrollOptions.CanvasSize = UDim2.new(0, 0, 0, optList.AbsoluteContentSize.Y + 10)
+        
+        if isOpen then
+            local optionListHeight = optList.AbsoluteContentSize.Y + 15
+            if optionListHeight > 90 then optionListHeight = 90 end
+            scrollOptions.Size = UDim2.new(0.92, 0, 0, optionListHeight)
+            
+            local totalTargetHeight = optionListHeight + 36 + 28 + 20
+            dropContainer.Size = UDim2.new(0.95, 0, 0, totalTargetHeight)
+        end
+    end
+
+    populateOptions("")
+    updateSelectedLabel()
+    if callback then callback(selectedItems) end
+
+    searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+        populateOptions(searchBox.Text)
+    end)
+
+    optList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        scrollOptions.CanvasSize = UDim2.new(0, 0, 0, optList.AbsoluteContentSize.Y + 10)
+    end)
+
+    contentHolder:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+        if isOpen then
+            local optionListHeight = optList.AbsoluteContentSize.Y + 15
+            if optionListHeight > 90 then optionListHeight = 90 end
+            local totalHeight = optionListHeight + 36 + 28 + 20
+            dropContainer.Size = UDim2.new(0.95, 0, 0, totalHeight)
+        end
+    end)
+
+    headerBtn.MouseButton1Click:Connect(function()
+        isOpen = not isOpen
+        local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+        
+        if isOpen then
+            local optionListHeight = optList.AbsoluteContentSize.Y + 15
+            if optionListHeight > 90 then optionListHeight = 90 end
+            local totalHeight = optionListHeight + 36 + 28 + 20
+            
+            TweenService:Create(arrowIcon, tweenInfo, {Rotation = 270}):Play()
+            TweenService:Create(dropContainer, tweenInfo, {Size = UDim2.new(0.95, 0, 0, totalHeight)}):Play()
+        else
+            TweenService:Create(arrowIcon, tweenInfo, {Rotation = 90}):Play()
+            TweenService:Create(dropContainer, tweenInfo, {Size = UDim2.new(0.95, 0, 0, 36)}):Play()
+        end
+    end)
+
+    return dropContainer
+end
+
+
+----------------------------------------------------
+-- SINGLE-SELECT DROPDOWN SELECTOR (Walang Search / Walang All)
+----------------------------------------------------
+function UIAPI.createSingleDropdownSelect(parentContainer, title, itemsListTable, callback)
+    local isOpen = false
+    
+    -- Gagamit tayo ng string value para sa single selection state
+    if not currentConfigData.singleDropdowns then
+        currentConfigData.singleDropdowns = {}
+    end
+    if not currentConfigData.singleDropdowns[title] then
+        currentConfigData.singleDropdowns[title] = itemsListTable[1] or ""
+    end
+    
+    local selectedValue = currentConfigData.singleDropdowns[title]
+    
+    local dropContainer = Instance.new("Frame")
+    dropContainer.Size = UDim2.new(0.95, 0, 0, 36)
+    dropContainer.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    dropContainer.BackgroundTransparency = 0.5
+    dropContainer.ClipsDescendants = true
+    dropContainer.Parent = parentContainer
+
+    local dropCorner = Instance.new("UICorner")
+    dropCorner.CornerRadius = UDim.new(0, 6)
+    dropCorner.Parent = dropContainer
+
+    local headerBtn = Instance.new("TextButton")
+    headerBtn.Size = UDim2.new(1, 0, 0, 36)
+    headerBtn.BackgroundTransparency = 1
+    headerBtn.Text = ""
+    headerBtn.Parent = dropContainer
+
+    local titleLbl = Instance.new("TextLabel")
+    titleLbl.Size = UDim2.new(0.5, 0, 1, 0)
+    titleLbl.Position = UDim2.new(0, 12, 0, 0)
+    titleLbl.BackgroundTransparency = 1
+    titleLbl.Text = title
+    titleLbl.TextColor3 = Color3.fromRGB(230, 230, 230)
+    titleLbl.Font = Enum.Font.GothamBold
+    titleLbl.TextSize = 11
+    titleLbl.TextXAlignment = Enum.TextXAlignment.Left
+    titleLbl.Parent = headerBtn
+
+    local selectedLbl = Instance.new("TextLabel")
+    selectedLbl.Size = UDim2.new(0.4, 0, 1, 0)
+    selectedLbl.Position = UDim2.new(0.55, -20, 0, 0)
+    selectedLbl.BackgroundTransparency = 1
+    selectedLbl.Text = selectedValue ~= "" and selectedValue or "Select..."
+    selectedLbl.TextColor3 = Color3.fromRGB(150, 150, 150)
+    selectedLbl.Font = Enum.Font.Gotham
+    selectedLbl.TextSize = 10
+    selectedLbl.TextXAlignment = Enum.TextXAlignment.Right
+    selectedLbl.Parent = headerBtn
+
+    local arrowIcon = Instance.new("ImageLabel")
+    arrowIcon.Size = UDim2.new(0, 14, 0, 14)
+    arrowIcon.Position = UDim2.new(1, -24, 0.5, -7)
+    arrowIcon.BackgroundTransparency = 1
+    arrowIcon.Image = "rbxassetid://10709791437"
+    arrowIcon.Rotation = 90
+    arrowIcon.ImageColor3 = Color3.fromRGB(180, 180, 180)
+    arrowIcon.Parent = headerBtn
+
+    local contentHolder = Instance.new("Frame")
+    contentHolder.Size = UDim2.new(1, 0, 0, 0)
+    contentHolder.Position = UDim2.new(0, 0, 0, 36)
+    contentHolder.BackgroundTransparency = 1
+    contentHolder.Parent = dropContainer
+
+    local listLayout = Instance.new("UIListLayout")
+    listLayout.Padding = UDim.new(0, 6)
+    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    listLayout.Parent = contentHolder
+
+    local scrollOptions = Instance.new("ScrollingFrame")
+    scrollOptions.Size = UDim2.new(0.92, 0, 0, #itemsListTable * 30 + 5)
+    scrollOptions.BackgroundTransparency = 1
+    scrollOptions.BorderSizePixel = 0
+    scrollOptions.CanvasSize = UDim2.new(0, 0, 0, 0)
+    scrollOptions.ScrollBarThickness = 2
+    scrollOptions.ScrollBarImageColor3 = Color3.fromRGB(80, 80, 80)
+    scrollOptions.Parent = contentHolder
+
+    local optList = Instance.new("UIListLayout")
+    optList.Padding = UDim.new(0, 4)
+    optList.SortOrder = Enum.SortOrder.LayoutOrder
+    optList.Parent = scrollOptions
+
+    local optionButtons = {}
+
+    local function populateOptions()
+        for _, btn in pairs(optionButtons) do btn:Destroy() end
+        optionButtons = {}
+
+        for _, itemText in ipairs(itemsListTable) do
+            local optBtn = Instance.new("TextButton")
+            optBtn.Size = UDim2.new(1, 0, 0, 26)
+            
+            local isSelected = (selectedValue == itemText)
+            optBtn.BackgroundColor3 = isSelected and Color3.fromRGB(150, 30, 50) or Color3.fromRGB(35, 35, 35)
+            optBtn.BackgroundTransparency = isSelected and 0.2 or 0.5
+            
+            optBtn.Text = "  " .. itemText
+            optBtn.TextColor3 = isSelected and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(200, 200, 200)
+            optBtn.Font = isSelected and Enum.Font.GothamBold or Enum.Font.Gotham
+            optBtn.TextSize = 11
+            optBtn.TextXAlignment = Enum.TextXAlignment.Left
+
+            local optCorner = Instance.new("UICorner")
+            optCorner.CornerRadius = UDim.new(0, 4)
+            optCorner.Parent = optBtn
+
+            optBtn.MouseButton1Click:Connect(function()
+                selectedValue = itemText
+                currentConfigData.singleDropdowns[title] = selectedValue
+                selectedLbl.Text = selectedValue
+                
+                -- Isara ang dropdown pagkapili
+                isOpen = false
+                local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+                TweenService:Create(arrowIcon, tweenInfo, {Rotation = 90}):Play()
+                TweenService:Create(dropContainer, tweenInfo, {Size = UDim2.new(0.95, 0, 0, 36)}):Play()
+
+                populateOptions()
+                if callback then callback(selectedValue) end
+            end)
+
+            optBtn.Parent = scrollOptions
+            table.insert(optionButtons, optBtn)
+        end
+        scrollOptions.CanvasSize = UDim2.new(0, 0, 0, optList.AbsoluteContentSize.Y + 5)
+    end
+
+    populateOptions()
+    if callback then callback(selectedValue) end
+
+    contentHolder:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+        if isOpen then
+            dropContainer.Size = UDim2.new(0.95, 0, 0, listLayout.AbsoluteContentSize.Y + 20)
+        end
+    end)
+
+    headerBtn.MouseButton1Click:Connect(function()
+        isOpen = not isOpen
+        local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+        local totalHeight = listLayout.AbsoluteContentSize.Y + 20
+        
+        if isOpen then
+            TweenService:Create(arrowIcon, tweenInfo, {Rotation = 270}):Play()
+            TweenService:Create(dropContainer, tweenInfo, {Size = UDim2.new(0.95, 0, 0, totalHeight)}):Play()
+        else
+            TweenService:Create(arrowIcon, tweenInfo, {Rotation = 90}):Play()
+            TweenService:Create(dropContainer, tweenInfo, {Size = UDim2.new(0.95, 0, 0, 36)}):Play()
+        end
+    end)
+
+    return dropContainer
+end
+
+----------------------------------------------------
+-- ENTER TEXT / INPUT BOX (Para sa Custom Weight Target)
+----------------------------------------------------
+function UIAPI.createEnterText(parentContainer, title, placeholder, defaultVal, callback)
+    if not currentConfigData.inputs then
+        currentConfigData.inputs = {}
+    end
+    if currentConfigData.inputs[title] == nil then
+        currentConfigData.inputs[title] = tostring(defaultVal or "")
+    end
+
+    local container = Instance.new("Frame")
+    container.Size = UDim2.new(0.95, 0, 0, 36)
+    container.BackgroundTransparency = 1
+    container.Parent = parentContainer
+
+    local titleLbl = Instance.new("TextLabel")
+    titleLbl.Size = UDim2.new(0.5, 0, 1, 0)
+    titleLbl.Position = UDim2.new(0, 12, 0, 0)
+    titleLbl.BackgroundTransparency = 1
+    titleLbl.Text = title
+    titleLbl.TextColor3 = Color3.fromRGB(230, 230, 230)
+    titleLbl.Font = Enum.Font.GothamBold
+    titleLbl.TextSize = 11
+    titleLbl.TextXAlignment = Enum.TextXAlignment.Left
+    titleLbl.Parent = container
+
+    local textBox = Instance.new("TextBox")
+    textBox.Size = UDim2.new(0, 100, 0, 26)
+    textBox.Position = UDim2.new(1, -108, 0.5, -13)
+    textBox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    textBox.BackgroundTransparency = 0.4
+    textBox.Text = currentConfigData.inputs[title]
+    textBox.PlaceholderText = placeholder or "Enter..."
+    textBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 120)
+    textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    textBox.Font = Enum.Font.Gotham
+    textBox.TextSize = 11
+    textBox.ClearTextOnFocus = false
+    textBox.Parent = container
+
+    local boxCorner = Instance.new("UICorner")
+    boxCorner.CornerRadius = UDim.new(0, 4)
+    boxCorner.Parent = textBox
+
+    textBox.FocusLost:Connect(function(enterPressed)
+        local val = textBox.Text
+        currentConfigData.inputs[title] = val
+        if callback then
+            callback(val)
+        end
+    end)
+
+    return container
+end
+
+
+
+----------------------------------------------------
+-- TOGGLE CREATOR
+----------------------------------------------------
+function UIAPI.createToggle(parentContainer, title, description, callback)
+    local row = Instance.new("Frame")
+    row.Size = UDim2.new(0.95, 0, 0, 42)
+    row.BackgroundTransparency = 1
+    
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(0.7, 0, 0, 16)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Text = title
+    titleLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextSize = 11
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = row
+    
+    local descLabel = Instance.new("TextLabel")
+    descLabel.Size = UDim2.new(0.75, 0, 0, 20)
+    descLabel.Position = UDim2.new(0, 0, 0, 16)
+    descLabel.BackgroundTransparency = 1
+    descLabel.Text = description
+    descLabel.TextColor3 = Color3.fromRGB(130, 130, 130)
+    descLabel.Font = Enum.Font.Gotham
+    descLabel.TextSize = 10
+    descLabel.TextWrapped = true
+    descLabel.TextXAlignment = Enum.TextXAlignment.Left
+    descLabel.TextYAlignment = Enum.TextYAlignment.Top
+    descLabel.Parent = row
+    
+    local toggleBtn = Instance.new("TextButton")
+    toggleBtn.Size = UDim2.new(0, 36, 0, 18)
+    toggleBtn.Position = UDim2.new(1, -34, 0.5, -9)
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    toggleBtn.Text = ""
+    
+    local tCorner = Instance.new("UICorner")
+    tCorner.CornerRadius = UDim.new(1, 0)
+    tCorner.Parent = toggleBtn
+    
+    local indicator = Instance.new("Frame")
+    indicator.Size = UDim2.new(0, 12, 0, 12)
+    indicator.Position = UDim2.new(0, 3, 0.5, -6)
+    indicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    
+    local iCorner = Instance.new("UICorner")
+    iCorner.CornerRadius = UDim.new(1, 0)
+    iCorner.Parent = indicator
+    indicator.Parent = toggleBtn
+    
+    local enabled = currentConfigData.toggles[title] == true
+    local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+    
+    local function applyState(state, immediate)
+        enabled = state
+        currentConfigData.toggles[title] = enabled
+        if immediate then
+            if enabled then
+                toggleBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                indicator.Position = UDim2.new(1, -15, 0.5, -6)
+                indicator.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            else
+                toggleBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+                indicator.Position = UDim2.new(0, 3, 0.5, -6)
+                indicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            end
+        else
+            if enabled then
+                TweenService:Create(toggleBtn, tweenInfo, {BackgroundColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+                TweenService:Create(indicator, tweenInfo, {Position = UDim2.new(1, -15, 0.5, -6), BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
+            else
+                TweenService:Create(toggleBtn, tweenInfo, {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}):Play()
+                TweenService:Create(indicator, tweenInfo, {Position = UDim2.new(0, 3, 0.5, -6), BackgroundColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+            end
+        end
+        if callback then callback(enabled) end
+    end
+
+    applyState(enabled, true)
+    
+    toggleBtn.MouseButton1Click:Connect(function()
+        applyState(not enabled, false)
+    end)
+    
+    toggleBtn.Parent = row
+    row.Parent = parentContainer
+end
+
+local StarterGui = game:GetService("StarterGui")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local Workspace = game:GetService("Workspace")
+local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+local Camera = Workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+local function notify(title, text, duration)
+    StarterGui:SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = duration or 3
+    })
+end
+
+----------------------------------------------------
+-- TOGGLE CREATOR (May On/Off switch)
+----------------------------------------------------
+function UIAPI.createToggle(pageName, title, description, callback)
+    local targetPage = pages[pageName]
+    if not targetPage then return end
+
+    local row = Instance.new("Frame")
+    row.Size = UDim2.new(0.92, 0, 0, 55)
+    row.BackgroundTransparency = 1
+    
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(0.7, 0, 0, 18)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Text = title
+    titleLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextSize = 13
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = row
+    
+    local descLabel = Instance.new("TextLabel")
+    descLabel.Size = UDim2.new(0.75, 0, 0, 32)
+    descLabel.Position = UDim2.new(0, 0, 0, 20)
+    descLabel.BackgroundTransparency = 1
+    descLabel.Text = description
+    descLabel.TextColor3 = Color3.fromRGB(130, 130, 130)
+    descLabel.Font = Enum.Font.Gotham
+    descLabel.TextSize = 11
+    descLabel.TextWrapped = true
+    descLabel.TextXAlignment = Enum.TextXAlignment.Left
+    descLabel.TextYAlignment = Enum.TextYAlignment.Top
+    descLabel.Parent = row
+    
+    local toggleBtn = Instance.new("TextButton")
+    toggleBtn.Size = UDim2.new(0, 42, 0, 22)
+    toggleBtn.Position = UDim2.new(1, -45, 0.5, -11)
+    toggleBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    toggleBtn.Text = ""
+    
+    local tCorner = Instance.new("UICorner")
+    tCorner.CornerRadius = UDim.new(1, 0)
+    tCorner.Parent = toggleBtn
+    
+    local indicator = Instance.new("Frame")
+    indicator.Size = UDim2.new(0, 16, 0, 16)
+    indicator.Position = UDim2.new(0, 3, 0.5, -8)
+    indicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    
+    local iCorner = Instance.new("UICorner")
+    iCorner.CornerRadius = UDim.new(1, 0)
+    iCorner.Parent = indicator
+    indicator.Parent = toggleBtn
+    
+    local enabled = false
+    local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+    
+    toggleBtn.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        if enabled then
+            TweenService:Create(toggleBtn, tweenInfo, {BackgroundColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+            TweenService:Create(indicator, tweenInfo, {Position = UDim2.new(1, -19, 0.5, -8), BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
+        else
+            TweenService:Create(toggleBtn, tweenInfo, {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}):Play()
+            TweenService:Create(indicator, tweenInfo, {Position = UDim2.new(0, 3, 0.5, -8), BackgroundColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+        end
+        if callback then callback(enabled) end
+    end)
+    
+    toggleBtn.Parent = row
+    row.Parent = targetPage
+end
+
+----------------------------------------------------
+-- 2. UPDATED BUTTON CREATOR (Malaking Rectangle + Mouse Icon)
+----------------------------------------------------
+function UIAPI.createButton(parentContainer, title, description, callback)
+    local row = Instance.new("Frame")
+    row.Size = UDim2.new(0.95, 0, 0, 48) -- Swabe ang taas para sa dalawang linya ng text
+    row.BackgroundTransparency = 1
+    
+    -- Ang buong row ay ginawang isang malaking clickable rectangle button
+    local actionBtn = Instance.new("TextButton")
+    actionBtn.Size = UDim2.new(1, 0, 1, 0)
+    actionBtn.Position = UDim2.new(0, 0, 0, 0)
+    actionBtn.BackgroundColor3 = Color3.fromRGB(150, 30, 50) -- Kulay ng button mo
+    actionBtn.BackgroundTransparency = 0.2
+    actionBtn.Text = "" -- Walang default text, gagamit tayo ng labels
+    actionBtn.AutoButtonColor = true
+    
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 6)
+    btnCorner.Parent = actionBtn
+    
+    -- Spacing sa loob para sa mga teksto
+    local padding = Instance.new("UIPadding")
+    padding.PaddingLeft = UDim.new(0, 12)
+    padding.PaddingRight = UDim.new(0, 12)
+    padding.Parent = actionBtn
+    
+    -- Title Label
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(0.8, 0, 0, 20)
+    titleLabel.Position = UDim2.new(0, 0, 0, 6)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Text = title
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextSize = 12
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = actionBtn
+    
+    -- Description Label
+    local descLabel = Instance.new("TextLabel")
+    descLabel.Size = UDim2.new(0.8, 0, 0, 18)
+    descLabel.Position = UDim2.new(0, 0, 0, 24)
+    descLabel.BackgroundTransparency = 1
+    descLabel.Text = description
+    descLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+    descLabel.Font = Enum.Font.Gotham
+    descLabel.TextSize = 10
+    descLabel.TextWrapped = true
+    descLabel.TextXAlignment = Enum.TextXAlignment.Left
+    descLabel.TextYAlignment = Enum.TextYAlignment.Top
+    descLabel.Parent = actionBtn
+    
+    -- Mouse Clicker Icon sa kanang dulo
+    local iconLabel = Instance.new("TextLabel")
+    iconLabel.Size = UDim2.new(0, 24, 0, 24)
+    iconLabel.Position = UDim2.new(1, -24, 0.5, -12)
+    iconLabel.BackgroundTransparency = 1
+    iconLabel.Text = "🖱️"
+    iconLabel.TextSize = 14
+    iconLabel.Parent = actionBtn
+    
+    -- Click trigger ng button
+    actionBtn.MouseButton1Click:Connect(function()
+        if callback then callback() end
+    end)
+    
+    actionBtn.Parent = row
+    row.Parent = parentContainer
+end
+
+
+----------------------------------------------------
+-- BAGONG BUTTON CREATOR (Para lang sa mga Standalone Buttons na may Mouse Pointer)
+----------------------------------------------------
+function UIAPI.createCustomButton(pageName, title, description, callback)
+    local targetPage = pages[pageName]
+    if not targetPage then return end
+
+    -- Ang mismong malaking clickable rectangle button
+    local actionBtn = Instance.new("TextButton")
+    actionBtn.Name = title .. "_CustomRectangle"
+    actionBtn.Size = UDim2.new(0.92, 0, 0, 55) -- Malaking rectangle
+    actionBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 40) -- Kulay na babagay sa background ng IOHUB mo
+    actionBtn.BackgroundTransparency = 0.4
+    actionBtn.Text = "" -- Alisin ang default button text
+    actionBtn.AutoButtonColor = true
+
+    -- Bilugan ang mga kanto ng rectangle
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, 6)
+    btnCorner.Parent = actionBtn
+
+    -- Spacing para hindi nakadikit ang mga letra sa gilid
+    local padding = Instance.new("UIPadding")
+    padding.PaddingLeft = UDim.new(0, 15)
+    padding.PaddingRight = UDim.new(0, 15)
+    padding.Parent = actionBtn
+    
+    -- Title Label sa loob ng malaking button
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(0.7, 0, 0, 18)
+    titleLabel.Position = UDim2.new(0, 0, 0, 8)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Text = title
+    titleLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextSize = 13
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = actionBtn
+    
+    -- Description Label sa loob ng malaking button
+    local descLabel = Instance.new("TextLabel")
+    descLabel.Size = UDim2.new(0.75, 0, 0, 32)
+    descLabel.Position = UDim2.new(0, 0, 0, 24)
+    descLabel.BackgroundTransparency = 1
+    descLabel.Text = description
+    descLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+    descLabel.Font = Enum.Font.Gotham
+    descLabel.TextSize = 11
+    descLabel.TextWrapped = true
+    descLabel.TextXAlignment = Enum.TextXAlignment.Left
+    descLabel.TextYAlignment = Enum.TextYAlignment.Top
+    descLabel.Parent = actionBtn
+    
+    -- Ang Mouse Click Cursor Asset sa kanang dulo ng rectangle
+    local mouseIcon = Instance.new("ImageLabel")
+    mouseIcon.Name = "MousePointerIcon"
+    mouseIcon.Size = UDim2.new(0, 22, 0, 22)
+    mouseIcon.Position = UDim2.new(1, -25, 0.5, -11)
+    mouseIcon.BackgroundTransparency = 1
+    mouseIcon.Image = "rbxassetid://10734896206" -- Mouse click cursor icon asset
+    mouseIcon.ImageColor3 = Color3.fromRGB(200, 200, 200)
+    mouseIcon.Parent = actionBtn
+    
+    -- Click at Flash Effect para sa mouse pointer
+    actionBtn.MouseButton1Click:Connect(function()
+        mouseIcon.ImageColor3 = Color3.fromRGB(255, 100, 120)
+        task.wait(0.1)
+        mouseIcon.ImageColor3 = Color3.fromRGB(200, 200, 200)
+        if callback then callback() end
+    end)
+    
+    actionBtn.Parent = targetPage
+end
+
+
 function UIAPI.switchTab(name)
     switchTab(name)
 end
