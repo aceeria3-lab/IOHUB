@@ -49,5 +49,5 @@ elseif table.find(controlIds, currentId) then
 -- KUNG HINDI NADE-DETECT ANG PLACE ID (Dito mapupunta ang Default Buttons)
 -- =========================================================================
 else 
-    boot("Loading Default Hub...", "https://raw.githubusercontent.com/Moymoy21/IOHUB/refs/heads/main/default.txt")
+    boot("Loading Default Hub...", "https://raw.githubusercontent.com/aceeria3-lab/IOHUB/refs/heads/main/default.lua")
 end
