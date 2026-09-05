@@ -34,16 +34,16 @@ local controlIds = {
 }
 
 if currentId == 128715637193371 then 
-    boot("Rage Book 3 Chapter 1", "https://raw.githubusercontent.com/Moymoy21/IOHUB/refs/heads/main/b3c1.txt")
+    boot("Rage Book 3 Chapter 1", "https://raw.githubusercontent.com/aceeria3-lab/IOHUB/refs/heads/main/default.lua")
 
 elseif currentId == 96354063422506 then 
-    boot("Jelousy Book 2 Chapter 4", "https://raw.githubusercontent.com/Moymoy21/IOHUB/refs/heads/main/b2c4v2.txt")
+    boot("Jelousy Book 2 Chapter 4", "https://raw.githubusercontent.com/aceeria3-lab/IOHUB/refs/heads/main/default.lua")
     
 elseif currentId == 15962819441 then 
-    boot("Jelousy Book 2 Chapter 3", "https://raw.githubusercontent.com/Moymoy21/IOHUB/refs/heads/main/b2c3.txt")
+    boot("Jelousy Book 2 Chapter 3", "https://raw.githubusercontent.com/aceeria3-lab/IOHUB/refs/heads/main/default.lua")
     
 elseif table.find(controlIds, currentId) then
-    boot("Control Book All Chapters", "https://raw.githubusercontent.com/Moymoy21/IOHUB/refs/heads/main/control.txt")
+    boot("Control Book All Chapters", "https://raw.githubusercontent.com/aceeria3-lab/IOHUB/refs/heads/main/default.lua")
 
 -- =========================================================================
 -- KUNG HINDI NADE-DETECT ANG PLACE ID (Dito mapupunta ang Default Buttons)
